@@ -368,11 +368,59 @@ string IPR(string ming) {
     }
     return key_1;
 }
+string DES_lock(string c, string a) {
+    //c 密钥  a明文
+    //加密
+    //cout << "---------------------------DES加密---------------------------" << endl;
+    //c = cin_check(c);
+    //得到了十六轮密钥
+    string key = htob(c);
+    Getkeys(key);
+
+
+    //a = cin_check(a);
+    //IP置换
+    string ming = IP(htob(a));
+    //cout << "ip置换后：\t" << ming << "   位数为" << ming.length() << endl;
+    //左明文 右明文
+    string ming_l = ming.substr(0, 32);
+    string ming_r = ming.substr(32, 32);
+    string temp_ming_r = ming_r;
+
+    //16轮轮函数
+    for (int i = 0; i < 16; i++) {
+        ming_r = Xor(F(ming_r, i), ming_l);
+        ming_l = temp_ming_r;
+        temp_ming_r = ming_r;
+    }
+    //密文合并
+    ming = ming_r;
+    ming += ming_l;
+    //逆置换
+    ming = IPR(ming);
+
+    cout << "获得密文：\t" << btoh(ming) << endl;
+
+    return btoh(ming);
+}
 
 int main() {
-
+    
+    string c, a;
     //输入密钥
-    string c;
+    cout << "输入密钥：\t";
+    cin >> c;
+    c = cin_check(c);
+    //输入明文
+    cout << "输入明文：\t";
+    cin >> a;
+    a = cin_check(a);
+    string mi = DES_lock(c, a);
+
+
+    //解密
+    cout << "---------------------------DES解密---------------------------" << endl;
+    //输入密钥
     cout << "输入密钥：\t";
     cin >> c;
     c = cin_check(c);
@@ -381,25 +429,49 @@ int main() {
     Getkeys(key);
 
     //输入明文
-    string a;
-    cout << "输入明文：\t";
+    cout << "输入密文：\t";
     cin >> a;
     a = cin_check(a);
+    //IP置换
     string ming = IP(htob(a));
     //cout << "ip置换后：\t" << ming << "   位数为" << ming.length() << endl;
-
+    //左明文 右明文
     string ming_l = ming.substr(0, 32);
     string ming_r = ming.substr(32, 32);
     string temp_ming_r = ming_r;
 
-    for (int i = 0; i < 16; i++) {
-        ming_r = Xor(F(ming_r,i), ming_l);
+    //16轮轮函数
+    for (int i = 15; i >= 0; i--) {
+        ming_r = Xor(F(ming_r, i), ming_l);
         ming_l = temp_ming_r;
         temp_ming_r = ming_r;
     }
+    //密文合并
     ming = ming_r;
     ming += ming_l;
+    //逆置换
     ming = IPR(ming);
 
-    cout << "获得密文：\t" << btoh(ming) << endl;
+    cout << "获得明文：\t" << btoh(ming) << endl;
+
+    cout << "---------------------------雪崩效应---------------------------" << endl;
+    //输入密钥
+    cout << "输入密钥：\t";
+    cin >> c;
+    c = cin_check(c);
+    //输入明文
+    cout << "输入明文：\t";
+    cin >> a;
+    for (int i = 0; i < 64; i++) {
+        //翻转
+        a = htob(cin_check(a));
+        if (a[i] == '0') { a[i] = '1'; }
+        else { a[i] = '0'; }
+        a = btoh(a);
+        DES_lock(c, a);
+    }
+
+
+
+
 }
