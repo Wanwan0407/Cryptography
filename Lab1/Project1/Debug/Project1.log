@@ -1,0 +1,4 @@
+﻿  源.cpp
+E:\vmware\Sharefile\Cryptography\Lab1\Project1\源.cpp(106,22): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab1\Project1\源.cpp(147,22): warning C4018: “<”: 有符号/无符号不匹配
+  Project1.vcxproj -> E:\vmware\Sharefile\Cryptography\Lab1\Project1\Debug\Project1.exe

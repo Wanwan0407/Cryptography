@@ -1,0 +1,7 @@
+﻿  DES.cpp
+E:\vmware\Sharefile\Cryptography\Lab2\DES-code\DES.cpp(34,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab2\DES-code\DES.cpp(110,27): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab2\DES-code\DES.cpp(117,27): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab2\DES-code\DES.cpp(225,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab2\DES-code\DES.cpp(238,29): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+  DES-code.vcxproj -> E:\vmware\Sharefile\Cryptography\Lab2\DES-code\Debug\DES-code.exe
