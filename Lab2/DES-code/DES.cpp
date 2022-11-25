@@ -78,7 +78,7 @@ string cin_check(string a) {
             a = "0" + a;
         }
     }
-    cout << "检查输入:\t" << a << endl;
+    //cout << "检查输入:\t" << a << endl;
     return a;
 }
 //密钥选择置换1 64->56
@@ -399,7 +399,7 @@ string DES_lock(string c, string a) {
     //逆置换
     ming = IPR(ming);
 
-    cout << "获得密文：\t" << btoh(ming) << endl;
+    cout << "获得密文：\t" << btoh(ming) ;
 
     return btoh(ming);
 }
@@ -416,7 +416,7 @@ int main() {
     cin >> a;
     a = cin_check(a);
     string mi = DES_lock(c, a);
-
+    cout << endl;
 
     //解密
     cout << "---------------------------DES解密---------------------------" << endl;
@@ -458,18 +458,37 @@ int main() {
     //输入密钥
     cout << "输入密钥：\t";
     cin >> c;
-    c = cin_check(c);
+    string d = cin_check(c);
     //输入明文
     cout << "输入明文：\t";
     cin >> a;
+    string b = cin_check(a);
+    //原本得到的密文sta
+    string sta= DES_lock(d, b);
+    cout << endl;
+    sta = htob(sta);
+    int diff[64] = {0};
+    double sum = 0;
     for (int i = 0; i < 64; i++) {
+        cout << "改变第" << i+1 << "位\t" ;
         //翻转
-        a = htob(cin_check(a));
-        if (a[i] == '0') { a[i] = '1'; }
-        else { a[i] = '0'; }
-        a = btoh(a);
-        DES_lock(c, a);
+        d = cin_check(c);
+        b = htob(cin_check(a));
+        //cout << "翻转前:" << b << endl;
+        if (b[i] == '0') { b[i] = '1'; }
+        else { b[i] = '0'; }
+        //cout << "翻转后:" << b << endl;
+
+        b = btoh(b);
+        string sta2=htob(DES_lock(d, b));
+        for (int j = 0; j < 64; j++) {
+            if (sta2[j] != sta[j]) { diff[i]++; }
+        }
+        sum += diff[i];
+        cout << "\t改变数量：" << diff[i] << endl;
     }
+
+    cout << "平均改变位数：\t" << sum / 64 << endl;
 
 
 
