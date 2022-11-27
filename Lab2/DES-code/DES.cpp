@@ -11,8 +11,6 @@ const int leftarr[16] ={
 };
 //十六进制转二进制
 string htob(string h) {
-
-    //01AB
     string b;
     map<char, string>map_hb; 
     map_hb['0'] = "0000";
@@ -35,14 +33,10 @@ string htob(string h) {
         if (h[i] >= 97 && h[i] <= 122) { h[i] -= 32; }
         b += map_hb[h[i]];
     }
-
-    
     return b;
 }
 //二进制转十六进制
 string btoh(string h) {
-
-    //01AB
     string b="";
     map<string, char>map_hb;
     map_hb["0000"] = '0';
@@ -66,7 +60,6 @@ string btoh(string h) {
         b += map_hb[t];
     }
     return b;
-   
 }
 //输入64bit数据检查
 string cin_check(string a) {
@@ -102,8 +95,8 @@ string pc_1(string key) {
     return key_1;
 }
 //密钥左移
-string leftmove(string key,int b) {
-    
+string leftmove(string key,int b) {  
+    //key为密钥 b为密钥数组下标
     string a="";
     if (leftarr[b] == 1) {
         
@@ -121,7 +114,6 @@ string leftmove(string key,int b) {
         a += key[1];
     }
     //cout << "左移" << leftarr[b] << "位后：\t" << a << endl;
-
     return a;
 }
 //密钥选择置换2 56->48
@@ -142,13 +134,12 @@ string pc_2(string key) {
         key_1 += k[i];
     }
     return key_1;
-
 }
 //获得16轮密钥 存入keys[16]
 void Getkeys(string key) {
     //密钥64->56
     key = pc_1(key);
-   // cout << "pc1置换后：\t" << key << "   位数为" << key.length() << endl;
+    //cout << "pc1置换后：\t" << key << "   位数为" << key.length() << endl;
 
     //key分成左和右
     string key_l = key.substr(0, 28);
@@ -173,9 +164,7 @@ void Getkeys(string key) {
         key_48 = pc_2(key_48);
         keys[num] = key_48;
         //cout << "密钥key："<<num+1<<"\t" << key_48 << "   位数为" << key_48.length() << endl;
-       
     }
-
 }
 //初始置换IP
 string IP(string ming) {
@@ -217,7 +206,6 @@ string E(string ming) {
     }
     
     return key_1;
-
 }
 //异或
 string Xor (string ming,string key) {
@@ -302,8 +290,7 @@ string S(string ming) {
     string m[8];
     string res="";
     map<string, int>mp_si;
-    
-
+   
     for (int i = 0; i < 8; i++) {
         string x = "";
         string y = "";
@@ -315,7 +302,6 @@ string S(string ming) {
         int s = stable[i][bstod(x)][bstod(y)];
         res += dtobs(s);
     }
-   
     //cout <<"S盒" << res << "位数" << res.length() << endl;
     return res;
 }
@@ -371,14 +357,9 @@ string IPR(string ming) {
 string DES_lock(string c, string a) {
     //c 密钥  a明文
     //加密
-    //cout << "---------------------------DES加密---------------------------" << endl;
-    //c = cin_check(c);
     //得到了十六轮密钥
     string key = htob(c);
     Getkeys(key);
-
-
-    //a = cin_check(a);
     //IP置换
     string ming = IP(htob(a));
     //cout << "ip置换后：\t" << ming << "   位数为" << ming.length() << endl;
@@ -405,92 +386,147 @@ string DES_lock(string c, string a) {
 }
 
 int main() {
-    
-    string c, a;
-    //输入密钥
-    cout << "输入密钥：\t";
-    cin >> c;
-    c = cin_check(c);
-    //输入明文
-    cout << "输入明文：\t";
-    cin >> a;
-    a = cin_check(a);
-    string mi = DES_lock(c, a);
-    cout << endl;
+    while (1) {
+        string c, a;
+        cout << "--------------------------------------------------------------" << endl;
+        cout << "请选择功能：" << endl <<
+            "1.DES加密" << endl
+            << "2.DES解密" << endl
+            << "3.雪崩效应-改变明文" << endl
+            << "4.雪崩效应-改变密钥" << endl;
+        int se;
+        cin >> se;
+        if (se == 1) {
+            cout << "---------------------------DES加密---------------------------" << endl;
 
-    //解密
-    cout << "---------------------------DES解密---------------------------" << endl;
-    //输入密钥
-    cout << "输入密钥：\t";
-    cin >> c;
-    c = cin_check(c);
-    //得到了十六轮密钥
-    string key = htob(c);
-    Getkeys(key);
-
-    //输入明文
-    cout << "输入密文：\t";
-    cin >> a;
-    a = cin_check(a);
-    //IP置换
-    string ming = IP(htob(a));
-    //cout << "ip置换后：\t" << ming << "   位数为" << ming.length() << endl;
-    //左明文 右明文
-    string ming_l = ming.substr(0, 32);
-    string ming_r = ming.substr(32, 32);
-    string temp_ming_r = ming_r;
-
-    //16轮轮函数
-    for (int i = 15; i >= 0; i--) {
-        ming_r = Xor(F(ming_r, i), ming_l);
-        ming_l = temp_ming_r;
-        temp_ming_r = ming_r;
-    }
-    //密文合并
-    ming = ming_r;
-    ming += ming_l;
-    //逆置换
-    ming = IPR(ming);
-
-    cout << "获得明文：\t" << btoh(ming) << endl;
-
-    cout << "---------------------------雪崩效应---------------------------" << endl;
-    //输入密钥
-    cout << "输入密钥：\t";
-    cin >> c;
-    string d = cin_check(c);
-    //输入明文
-    cout << "输入明文：\t";
-    cin >> a;
-    string b = cin_check(a);
-    //原本得到的密文sta
-    string sta= DES_lock(d, b);
-    cout << endl;
-    sta = htob(sta);
-    int diff[64] = {0};
-    double sum = 0;
-    for (int i = 0; i < 64; i++) {
-        cout << "改变第" << i+1 << "位\t" ;
-        //翻转
-        d = cin_check(c);
-        b = htob(cin_check(a));
-        //cout << "翻转前:" << b << endl;
-        if (b[i] == '0') { b[i] = '1'; }
-        else { b[i] = '0'; }
-        //cout << "翻转后:" << b << endl;
-
-        b = btoh(b);
-        string sta2=htob(DES_lock(d, b));
-        for (int j = 0; j < 64; j++) {
-            if (sta2[j] != sta[j]) { diff[i]++; }
+            //输入密钥
+            cout << "输入密钥：\t";
+            cin >> c;
+            c = cin_check(c);
+            //输入明文
+            cout << "输入明文：\t";
+            cin >> a;
+            a = cin_check(a);
+            string mi = DES_lock(c, a);
+            cout << endl;
         }
-        sum += diff[i];
-        cout << "\t改变数量：" << diff[i] << endl;
+
+        if (se == 2) {
+            //解密
+            cout << "---------------------------DES解密---------------------------" << endl;
+            //输入密钥
+            cout << "输入密钥：\t";
+            cin >> c;
+            c = cin_check(c);
+            //得到了十六轮密钥
+            string key = htob(c);
+            Getkeys(key);
+
+            //输入明文
+            cout << "输入密文：\t";
+            cin >> a;
+            a = cin_check(a);
+            //IP置换
+            string ming = IP(htob(a));
+            //cout << "ip置换后：\t" << ming << "   位数为" << ming.length() << endl;
+            //左明文 右明文
+            string ming_l = ming.substr(0, 32);
+            string ming_r = ming.substr(32, 32);
+            string temp_ming_r = ming_r;
+
+            //16轮轮函数
+            for (int i = 15; i >= 0; i--) {
+                ming_r = Xor(F(ming_r, i), ming_l);
+                ming_l = temp_ming_r;
+                temp_ming_r = ming_r;
+            }
+            //密文合并
+            ming = ming_r;
+            ming += ming_l;
+            //逆置换
+            ming = IPR(ming);
+
+            cout << "获得明文：\t" << btoh(ming) << endl;
+        }
+
+
+        if (se == 3) {
+            cout << "---------------------------雪崩效应-改变明文---------------------------" << endl;
+            //输入密钥
+            cout << "固定密钥：\t";
+            cin >> c;
+            string d = cin_check(c);
+            //输入明文
+            cout << "输入明文：\t";
+            cin >> a;
+            string b = cin_check(a);
+            //原本得到的密文sta
+            string sta = DES_lock(d, b);
+            cout << endl;
+            sta = htob(sta);
+            int diff[64] = { 0 };
+            double sum = 0;
+            for (int i = 0; i < 64; i++) {
+                cout << "改变第" << i + 1 << "位\t";
+                //翻转
+                d = cin_check(c);
+                b = htob(cin_check(a));
+                //cout << "翻转前:" << b << endl;
+                if (b[i] == '0') { b[i] = '1'; }
+                else { b[i] = '0'; }
+                //cout << "翻转后:" << b << endl;
+
+                b = btoh(b);
+                string sta2 = htob(DES_lock(d, b));
+                for (int j = 0; j < 64; j++) {
+                    if (sta2[j] != sta[j]) { diff[i]++; }
+                }
+                sum += diff[i];
+                cout << "\t改变数量：" << diff[i] << endl;
+            }
+
+            cout << "平均改变位数：\t" << sum / 64 << endl;
+        }
+
+        if (se == 4) {
+            cout << "---------------------------雪崩效应-改变密钥---------------------------" << endl;
+            //输入密钥
+            cout << "输入密钥：\t";
+            cin >> c;
+            string d = cin_check(c);
+            //输入明文
+            cout << "固定明文：\t";
+            cin >> a;
+            string b = cin_check(a);
+            //原本得到的密文sta
+            string sta = DES_lock(d, b);
+            cout << endl;
+            sta = htob(sta);
+            int diff[64] = { 0 };
+            double sum = 0;
+            for (int i = 0; i < 64; i++) {
+                cout << "改变第" << i + 1 << "位\t";
+                //翻转
+                d = htob(cin_check(c));
+                b = cin_check(a);
+                //cout << "翻转前:" << b << endl;
+                if (d[i] == '0') { d[i] = '1'; }
+                else { d[i] = '0'; }
+                //cout << "翻转后:" << b << endl;
+
+                d = btoh(d);
+                string sta2 = htob(DES_lock(d, b));
+                for (int j = 0; j < 64; j++) {
+                    if (sta2[j] != sta[j]) { diff[i]++; }
+                }
+                sum += diff[i];
+                cout << "\t改变数量：" << diff[i] << endl;
+            }
+
+            cout << "平均改变位数：\t" << sum / 64 << endl;
+        }
+
+
     }
-
-    cout << "平均改变位数：\t" << sum / 64 << endl;
-
-
-
 
 }
