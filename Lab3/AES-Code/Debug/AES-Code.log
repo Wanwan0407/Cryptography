@@ -1,5 +1,8 @@
 ﻿  AES.cpp
-E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(165,23): warning C4018: “<”: 有符号/无符号不匹配
-E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(182,23): warning C4018: “<”: 有符号/无符号不匹配
-E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(194,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(249,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(260,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(277,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(289,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(391,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\AES.cpp(396,27): warning C4018: “<”: 有符号/无符号不匹配
   AES-Code.vcxproj -> E:\vmware\Sharefile\Cryptography\Lab3\AES-Code\Debug\AES-Code.exe

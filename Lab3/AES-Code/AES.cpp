@@ -61,7 +61,7 @@ string cin_check(string a) {
             a[i] -= 32;
         }
     }
-    cout << "检查输入:\t" << a <<"位数：\t"<<a.length() << endl;
+    //cout << "检查输入:\t" << a <<"位数：\t"<<a.length() << endl;
     return a;
 }
 //字符串转十进制 一字节
@@ -166,6 +166,71 @@ string htoc(int a) {
     mp_ic[15] = "F";
     return mp_ic[a];
 }
+//十六进制转二进制
+string htob(char h) {
+    string b;
+    map<char, string>map_hb;
+    map_hb['0'] = "0000";
+    map_hb['1'] = "0001";
+    map_hb['2'] = "0010";
+    map_hb['3'] = "0011";
+    map_hb['4'] = "0100";
+    map_hb['5'] = "0101";
+    map_hb['6'] = "0110";
+    map_hb['7'] = "0111";
+    map_hb['8'] = "1000";
+    map_hb['9'] = "1001";
+    map_hb['A'] = "1010";
+    map_hb['B'] = "1011";
+    map_hb['C'] = "1100";
+    map_hb['D'] = "1101";
+    map_hb['E'] = "1110";
+    map_hb['F'] = "1111";
+    b = map_hb[h];
+    return b;
+}
+//二进制转十六进制
+char btoh(string h) {
+    char b;
+    map<string, char>map_hb;
+    map_hb["0000"] = '0';
+    map_hb["0001"] = '1';
+    map_hb["0010"] = '2';
+    map_hb["0011"] = '3';
+    map_hb["0100"] = '4';
+    map_hb["0101"] = '5';
+    map_hb["0110"] = '6';
+    map_hb["0111"] = '7';
+    map_hb["1000"] = '8';
+    map_hb["1001"] = '9';
+    map_hb["1010"] = 'A';
+    map_hb["1011"] = 'B';
+    map_hb["1100"] = 'C';
+    map_hb["1101"] = 'D';
+    map_hb["1110"] = 'E';
+    map_hb["1111"] = 'F';
+ 
+    b = map_hb[h];
+    
+    return b;
+}
+//十进制转二进制 4bit
+string dtob(int a) {
+    string res = "";
+    if (a / 8 == 1) { res += "1"; }
+    else { res += "0"; }
+
+    if (a %8/4 == 1) { res += "1"; }
+    else { res += "0"; }
+
+    if (a % 8 % 4/2 == 1) { res += "1"; }
+    else { res += "0"; }
+
+    if (a % 2== 1) { res += "1"; }
+    else { res += "0"; }
+
+    return res;
+}
 //左移一位
 string left_one(string a) {
     string b ="";
@@ -226,7 +291,7 @@ string keys_xor(string k1, string k2) {
         b += c;
        
     }
-    cout << "keys异或后：\t" << b << endl;
+    //cout << "keys异或后：\t" << b << endl;
     return b;
 }
 //T函数
@@ -236,6 +301,7 @@ string T(string a, int i) {
     a = key_xor(a, i);
     return a;
 }
+//获取44个密钥
 void Getkeys(string key) {
     key = cin_check(key);
     for (int i = 0; i < 4; i++) {
@@ -256,18 +322,20 @@ void Getkeys(string key) {
             o++;
         }
     }
-    cout << "已生成44个密钥！" << endl;
+    //cout << "已生成44个密钥！" << endl;
 }
+//打印查看密钥
 void Printkeys() {
     for (int i = 0; i < 44; i++) {
         cout << "k[" << i << "]：\t" << k[i] << endl;
     }
 }
+//有限域加、乘 -列混淆
 string ming_xor(string a, string b) {
-    string m[4] = {""};
-    string f[4] = {""};
+    string m[4] = { "" };
+    string f[4] = { "" };
     for (int i = 0; i < 4; i++) {
-        for (int j = i*2; j < i*2+1; j ++) {
+        for (int j = i * 2; j < i * 2 + 1; j++) {
             m[i] += a[j];
             m[i] += a[j + 1];
             f[i] += b[j];
@@ -279,81 +347,98 @@ string ming_xor(string a, string b) {
     //两两相乘 再相加
     for (int i = 0; i < 4; i++) {
         c[i] = stode(m[i]);
-        if (f[i] == "01") { 
-            //cout << "进入if(1)" << endl;  
-            //cout << "c[i]" << c[i] << endl;
-        }
-        if (f[i] == "02") {
-            //cout << "进入if(2)" << endl;
-            c[i]=(c[i] << 1);
-            //cout << "c[i]" << c[i] << endl;
-            if (c[i] >= 256) {
-                c[i] = c[i] & 0xff;
-                //cout << "c[i]" << c[i] << endl;
-                c[i] = c[i] ^ 0b00011011;
-                //cout << "c[i]" << c[i] << endl;
-            }
-        }
-        if (f[i] == "03") {
-            //cout << "进入if(3)" << endl;
-            int temp = c[i];
-            c[i] = (c[i] << 1);
-            //cout << "c[i]" << c[i] << endl;
-            if (c[i] >= 256) {
-                c[i] = c[i] & 0xff;
-                //cout << "c[i]" << c[i] << endl;
-                c[i] = c[i] ^ 0b00011011;
-                //cout << "c[i]" << c[i] << endl;
-            }
-            c[i] = temp ^ c[i];
-            //cout << "c[i]" << c[i] << endl;
-        }
-       
+        int p = stode(f[i]);
+        int sum = (p / 8) + (p % 8 / 4) + (p % 8 % 4 / 2);
+       // cout << "sum:" << sum << endl;
+        int mult2[3] = { 0 };
+        int lock = 1;
 
+        int temp = c[i];
+        if (sum != 0) {
+            for (int j = 0; j < 3; j++) {
+                c[i] = (c[i] << 1);
+                //cout << "左移一位c[i]：" << c[i] << endl;
+                if (c[i] >= 256) {
+
+                    c[i] = c[i] & 0xff;
+                    c[i] = c[i] ^ 0b00011011;
+                    //cout << "大于256的c[i]：" << c[i] << endl;
+                }
+                mult2[j] = c[i];
+                //cout << "mult2：" << mult2[j] << endl;
+            }
+            //算和
+            if (p / 8 == 1) { c[i] = mult2[2]; lock = 0; }
+            else { c[i] = mult2[0]; }
+
+            if (p % 8 / 4 == 1) { c[i] ^= mult2[1]; }
+            if (p % 8 % 4 / 2 == 1 && lock == 0) { c[i] ^= mult2[0]; }
+            if (p % 2 == 1) { c[i] ^= temp; }
+        }
+        else { c[i] = temp; }
+       // cout << "c[i]" << c[i] << endl;
     }
-   //还没相加
     int aq = c[0] ^ c[1] ^ c[2] ^ c[3];
     return htos(aq);
-
 }
 
+//雪崩效应
+int sum;
+int all;
+int changenum(string init, string later) {
+    sum = 0;
+    //cout << init << " " << later << endl;;
+    for (int i = 0; i < init.length(); i++) {
+        //拿到第i位的数字->string 4位二进制数
+        string a = htob(init[i]);
+        string b = htob(later[i]);
+        //cout << "a:" << a << "b:" << b << endl;
+        for (int j = 0; j < a.length(); j++) {
+            if (a[j] != b[j]) { sum++; }
+        }
+    }
+    all += sum;
+    return sum;
+}
+//轮密钥加
 void AddRoundKey(int n) {
     //行数据
-    cout << "轮密钥加:" << endl;
+    //cout << "轮密钥加:" << endl;
     int j = n * 4;
     for (int i = 0; i < 4; i++) {
         ming[i] = keys_xor(ming[i], k[j]);
         j++;
     }
 }
+//逆-轮密钥加
 void AddRoundKeyR(int n) {
     //行数据
-    cout << "轮密钥加:" << endl;
+    //cout << "轮密钥加:" << endl;
     int j = n * 4;
     for (int i = 0; i < 4; i++) {
         ci[i] = keys_xor(ci[i], k[j]);
         j++;
     }
 }
+//AES加密
 void AES_lock(string m) {
-    cin >> m;
     m = cin_check(m);
     
     //行数据
-    cout << "行数据" << endl;
+    //cout << "行数据" << endl;
     for (int i = 0; i < 4; i++) {
         ming[i] = "";
         for (int j = i * 8; j < i * 8 + 8; j++) {
             ming[i] += m[j];
         }
-        cout << "ming[" << i << "]：" << ming[i] << endl;
+        //cout << "ming[" << i << "]：" << ming[i] << endl;
     }
-    cout << "ming[0].length()" << ming[0].length();
+   // cout << "ming[0].length()" << ming[0].length();
     AddRoundKey(0);
 
     //10轮
     for (int q = 1; q < 11; q++) {
-        cout << "第" << q << "轮：" << endl;
+        //cout << "第" << q << "轮：" << endl;
         //S盒
         for (int i = 0; i < 4; i++) {
             ming[i] = key_S(ming[i]);
@@ -369,22 +454,21 @@ void AES_lock(string m) {
                     ming_l[n] += ming[i][j];
                 }
             }
-            cout << "ming_l[" << n << "]：" << ming_l[n] << endl;
+            //cout << "ming_l[" << n << "]：" << ming_l[n] << endl;
         }
 
         //左移
-        cout << "进行左移：" << endl;
         for (int i = 0; i < 4; i++) {
             int j = i;
             while (j != 0) {
                 ming_l[i] = left_one(ming_l[i]);
                 j--;
             }
-            cout << ming_l[i] << endl;
+            //cout << ming_l[i] << endl;
         }
 
         //左移后结果
-        cout << "左移后结果：" << endl;
+       //cout << "左移后结果：" << endl;
         string ming_2[4];
         for (int n = 0; n < 4; n++) {
             //第n列
@@ -394,19 +478,18 @@ void AES_lock(string m) {
                     ming_2[n] += ming_l[i][j];
                 }
             }
-            cout << "ming_2[" << n << "]：" << ming_2[n] << endl;
+            //cout << "ming_2[" << n << "]：" << ming_2[n] << endl;
         }
 
         
-        //列混合
-       
+        //列混淆
         string Mix[4] = {
            "02030101",
            "01020301",
            "01010203",
            "03010102"
         };
-        cout << "将要进行列混淆：" << endl;
+        //cout << "将要进行列混淆：" << endl;
 
 
         string ming_3[4] = { "" };
@@ -419,7 +502,7 @@ void AES_lock(string m) {
                         ming_3[n] += ming_2[i][j];
                     }
                 }
-                cout << "ming_3[" << n << "]：" << ming_3[n] << endl;
+                //cout << "ming_3[" << n << "]：" << ming_3[n] << endl;
             }
         }
         else {
@@ -428,7 +511,7 @@ void AES_lock(string m) {
                 for (int j = 0; j < 4; j++) {
                     ming_3[i] += ming_xor(ming_2[j], Mix[i]);
                 }
-                cout << ming_3[i] << endl;
+                //cout << ming_3[i] << endl;
             }
         }
             
@@ -443,76 +526,269 @@ void AES_lock(string m) {
                     ming_4[n] += ming_3[i][j];
                 }
             }
-            cout << "ming_4[" << n << "]：" << ming_4[n] << endl;
+            //cout << "ming_4[" << n << "]：" << ming_4[n] << endl;
             ming[n] = ming_4[n];
         }
-        cout << "将要轮密钥加：" << endl;
+        //cout << "将要轮密钥加：" << endl;
         AddRoundKey(q);
 
     }
  
 
 }
+//AES解密
 void AES_unlock(string c) {
-    cin >> c;
     c = cin_check(c);
+    //行数据
+    //cout << "行数据" << endl;
+    for (int i = 0; i < 4; i++) {
+        ci[i] = "";
+        for (int j = i * 8; j < i * 8 + 8; j++) {
+            ci[i] += c[j];
+        }
+        //cout << "ci[" << i << "]：" << ci[i] << endl;
+    }
     //轮密钥加
-    AddRoundKeyR(40);
+    AddRoundKeyR(10);
 
     for (int q = 9; q >= 0; q--) {
+        //cout << "第" << q << "轮：" << endl;
+       
 
+        string ming_l[4] = { "" };
+        //拿到列数据
+        for (int n = 0; n < 4; n++) {
+            //第n列
+            for (int i = 0; i < 4; i++) {
+                //第i行
+                for (int j = n * 2; j < n * 2 + 2; j++) {
+                    ming_l[n] += ci[i][j];
+                }
+            }
+            //cout << "ming_l[" << n << "]：" << ming_l[n] << endl;
+        }
 
+        //右移
+        //cout << "进行右移：" << endl;
+        for (int i = 0; i < 4; i++) {
+            int j = 4-i;
+            while (j != 0) {
+                ming_l[i] = left_one(ming_l[i]);
+                j--;
+            }
+            //cout << ming_l[i] << endl;
+        }
 
-
+        //左移后结果
+        //cout << "右移后结果：" << endl;
+        string ming_2[4];
+        for (int n = 0; n < 4; n++) {
+            //第n列
+            for (int i = 0; i < 4; i++) {
+                //第i行
+                for (int j = n * 2; j < n * 2 + 2; j++) {
+                    ming_2[n] += ming_l[i][j];
+                }
+            }
+            //cout << "ming_2[" << n << "]：" << ming_2[n] << endl;
+        }
+        //逆S盒
+        //cout << "逆S盒" << endl;
+        for (int i = 0; i < 4; i++) {
+            ci[i] = key_SR(ming_2[i]);
+            //cout << ci[i] << endl;
+        }
 
         //轮密钥加
         AddRoundKeyR(q);
+
+        for (int i = 0; i < 4; i++) {
+            ming_2[i] = ci[i];
+        }
+
+        //列混合-R
+
+        string Mix[4] = {
+           "0E0B0D09",
+           "090E0B0D",
+           "0D090E0B",
+           "0B0D090E"
+        };
+        //cout << "将要进行逆列混淆：" << endl;
+
+        string ming_3[4] = { "" };
+        if (q == 0) {
+            for (int n = 0; n < 4; n++) {
+                //第n列
+                for (int i = 0; i < 4; i++) {
+                    //第i行
+                    for (int j = n * 2; j < n * 2 + 2; j++) {
+                        ming_3[n] += ming_2[i][j];
+                    }
+                }
+                //cout << "ming_3[" << n << "]：" << ming_3[n] << endl;
+            }
+        }
+        else {
+            for (int i = 0; i < 4; i++) {
+                //第一行 mix 四列ming->第一行
+                for (int j = 0; j < 4; j++) {
+                    ming_3[i] += ming_xor(ming_2[j], Mix[i]);
+                }
+                //cout << ming_3[i] << endl;
+            }
+        }
+        
+
+        //列->行
+        string ming_4[4] = { "" };
+        for (int n = 0; n < 4; n++) {
+            //第n列
+            for (int i = 0; i < 4; i++) {
+                //第i行
+                for (int j = n * 2; j < n * 2 + 2; j++) {
+                    ming_4[n] += ming_3[i][j];
+                }
+            }
+            //cout << "ming_4[" << n << "]：" << ming_4[n] << endl;
+            ci[n] = ming_4[n];
+        }
+        //cout << "将要轮密钥加：" << endl;
+
+
+
     }
 
 
 }
- 
 
 int main() {
-	string c, m,key="";
-    //得到44个密钥
-	cin >> key;
-    Getkeys(key);
-    Printkeys();
+    while (1) {
+        cout << "------------------------------请选择功能：------------------------------" << endl
+            << "1.AES加密" << endl
+            << "2.AES解密" << endl
+            << "3.雪崩效应-改变密钥" << endl
+            << "4.雪崩效应-改变明文" << endl;
+        int func;
+        cin >> func;
 
-    
-    //明文
-    AES_lock(m);
-    cout << "得到密文：" << endl;
-    for (int i = 0; i < 4; i++) {
-        cout << ming[i] << endl;
-    }
+        string c, m, key = "";
+        //雪崩效应
+        string init_m = "";
 
-    //密文
-    
+        if (func == 1) {
+            cout << "------------------------------AES加密------------------------------" << endl;
+            //明文
+            cout << "输入明文：\t" << endl;
+            cin >> m;
+            cout << "输入密钥：\t" << endl;
+            cin >> key;
+            Getkeys(key);
 
-
-  
-
-   /* for (int i = 0; i < 4; i++) {
-        int s = 0;
-        for (int j = 0; j < 4 ; j++) {
-            
-            k2[i][j] = "";
-            k2[i][j] += k[i][s];
-            k2[i][j] += k[i][s+1];
-            s += 2;
-            k3[i][j] = stode(k2[i][j]);
-            cout << k3[i][j] << " ";
+            AES_lock(m);
+            cout << "得到密文：\t" << endl;
+            for (int i = 0; i < 4; i++) {
+                cout << ming[i];
+            }
+            cout << endl;
+            //Printkeys();
         }
-        cout << endl;
+
+        if (func == 2) {
+            cout << "------------------------------AES解密------------------------------" << endl;
+            //密文
+            cout << "输入密文：\t" << endl;
+            cin >> c;
+            cout << "输入密钥：\t" << endl;
+            cin >> key;
+            Getkeys(key);
+            AES_unlock(c);
+            cout << "得到明文：\t" << endl;
+            for (int i = 0; i < 4; i++) {
+                cout << ci[i];
+            }
+            cout << endl;
+        }
+
+        if (func == 3) {
+            cout << "------------------------------雪崩效应-改变密钥------------------------------" << endl;
+            cout << "输入明文：\t";
+            cin >> m;
+            cout << "输入密钥：\t";
+            cin >> key;
+            key = cin_check(key);
+            Getkeys(key);
+            AES_lock(m);
+            init_m = init_m.append(ming[0]).append(ming[1]).append(ming[2]).append(ming[3]);
+            cout << "得到密文：\t" << init_m << endl;
+            all = 0;
+            for (int i = 0; i < 32; i++) {
+
+                //要替换第几个字母
+                //cout << "改变前的key[i]：" << key[i] << endl;
+
+                //拿到第一个字母
+                for (int j = 0; j < 4; j++) {
+                    string temp_key = key;
+                    cout << "改变第" << 4 * i + j + 1 << "位：\t";
+                    string temp1 = htob(key[i]);//拿到四个数字
+                    if (temp1[j] == '0') { temp1[j] = '1'; }
+                    else { temp1[j] = '0'; }
+                    temp_key[i] = btoh(temp1);
+
+                    cout << temp_key;
+
+                    Getkeys(temp_key);
+                    AES_lock(m);
+                    string later_m = "";
+                    later_m = later_m.append(ming[0]).append(ming[1]).append(ming[2]).append(ming[3]);
+                    cout << "\t得到密文：" << later_m;
+
+                    cout << "\t改变位数：" << changenum(init_m, later_m) << endl;
+
+                }
+            }
+            cout << "平均改变位数：\t" << float(all) / 128 << endl;
+        }
+
+        if (func == 4) {
+            cout << "------------------------------雪崩效应-改变明文------------------------------" << endl;
+            cout << "输入明文：\t";
+            cin >> m;
+            //存储原来明文
+            string mm = cin_check(m);
+            cout << "输入密钥：\t";
+            cin >> key;
+            key = cin_check(key);
+            Getkeys(key);
+            AES_lock(m);
+            init_m = "";
+            init_m = init_m.append(ming[0]).append(ming[1]).append(ming[2]).append(ming[3]);
+            cout << "得到密文：\t" << init_m << endl;
+            all = 0;
+            for (int i = 0; i < 32; i++) {
+                //要替换第几个字母
+
+                //拿到第一个字母
+                for (int j = 0; j < 4; j++) {
+                    string temp_m = mm;
+                    cout << "改变第" << 4 * i + j + 1 << "位：\t";
+                    string temp1 = htob(mm[i]);//拿到四个数字
+                    if (temp1[j] == '0') { temp1[j] = '1'; }
+                    else { temp1[j] = '0'; }
+                    temp_m[i] = btoh(temp1);
+
+                    cout << temp_m;
+
+                    AES_lock(temp_m);
+                    string later_m = "";
+                    later_m = later_m.append(ming[0]).append(ming[1]).append(ming[2]).append(ming[3]);
+                    cout << "\t得到密文：" << later_m;
+
+                    cout << "\t改变位数：" << changenum(init_m, later_m) << endl;
+                }
+            }
+            cout << "平均改变位数：\t" << float(all) / 128 << endl;
+        }
     }
-
-    for (int i = 4; i < 44; i++) {
-        Extend(k3[i]);
-    }
-
-
-    cout << int(101^int(10))<<endl;
-    cout << (0x32 << 16) << endl;*/
 }
